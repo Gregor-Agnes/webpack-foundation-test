@@ -38,32 +38,33 @@ module.exports = {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
-                    use: ['css-loader']
+                    use: ['style-loader', 'css-loader']
                 })
             },
             {
                 test: /\.s[ac]ss$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        {
-                            loader: "css-loader",
-                            options: {
-                                importLoaders:  1,
-                                sourceMap: true
-                            }
-                        },
-                        {
-                            loader: "sass-loader",
-                            options: {
-                                sourceMap: true,
-                                includePaths: [
-                                   // path.resolve(__dirname, './node_modules/bootstrap-sass/assets/stylesheets'),
-                                ]
-                            }
-                        },
-                    ],
-                })
+                use: [
+                    {
+                        loader: "style-loader"
+
+                    },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            importLoaders:  1,
+                            sourceMap: true
+                        }
+                    },
+                    {
+                        loader: "sass-loader",
+                        options: {
+                            sourceMap: true,
+                            includePaths: [
+                                // path.resolve(__dirname, './node_modules/bootstrap-sass/assets/stylesheets'),
+                            ]
+                        }
+                    },
+                ],
             }
             ]
     },
