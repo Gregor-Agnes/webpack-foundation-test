@@ -1,15 +1,25 @@
 const path = require('path');
 const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     entry: './main.js',
 
     plugins: [
-        new webpack.HotModuleReplacementPlugin() // Enable HMR
-    ],
+        new webpack.HotModuleReplacementPlugin(),
+        new ExtractTextPlugin({ // define where to save the file
+            filename: 'main.css',
+            allChunks: true,
+        }),
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery"
+        })
+
+],
 
     output: {
-        filename: './bundle.js',
+        filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/'
     },
@@ -25,10 +35,37 @@ module.exports = {
                 }
             },
             {
-                test: /\.scss$/,
-                loader: 'style-loader!css-loader!autoprefixer-loader!sass-loader'
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader']
+                })
+            },
+            {
+                test: /\.s[ac]ss$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: [
+                        {
+                            loader: "css-loader",
+                            options: {
+                                importLoaders:  1,
+                                sourceMap: true
+                            }
+                        },
+                        {
+                            loader: "sass-loader",
+                            options: {
+                                sourceMap: true,
+                                includePaths: [
+                                   // path.resolve(__dirname, './node_modules/bootstrap-sass/assets/stylesheets'),
+                                ]
+                            }
+                        },
+                    ],
+                })
             }
-        ]
+            ]
     },
 
     devServer: {
@@ -36,4 +73,5 @@ module.exports = {
         contentBase: path.resolve(__dirname, 'dist'),
         publicPath: '/'
     }
-};
+}
+;

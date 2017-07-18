@@ -1,5 +1,9 @@
-window.$ = window.jQuery = require("jquery");
-require('./node_modules/foundation-sites/js/foundation.core')
+
+require('foundation-sites/dist/js/foundation.min.js');
 require('./test.scss')
 
-$(document).foundation();
+$(document).ready(function() {
+    console.log('achsso')
+})
+
+$(document).foundation()
