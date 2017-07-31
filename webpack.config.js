@@ -14,31 +14,46 @@ module.exports = {
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery"
+        }),
+        new webpack.LoaderOptionsPlugin({
+            debug: true
         })
 
-],
+    ],
 
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
-        publicPath: 'http://localhost:8081'
+        publicPath: 'http://localhost'
     },
     module: {
         loaders: [
             {
                 test: /\.js$/,
-                exclude: /node_modules/,
+                //exclude: /(readmore.js)/,
                 loader: 'babel-loader',
-                query: {
+                options: {
                     presets: ['es2015']
-                }
+                },
+            },
+            {
+                test: /\.(eot|svg|ttf|woff|woff2)$/,
+                loader: 'file-loader?name=/Fonts/[name].[ext]'
             },
             {
                 test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: ['style-loader', 'css-loader']
-                })
+                use: [{
+                    loader: "style-loader"
+
+                },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            importLoaders: 1,
+                            sourceMap: true
+                        }
+                    },
+                ]
             },
             {
                 test: /\.s[ac]ss$/,
@@ -50,7 +65,7 @@ module.exports = {
                     {
                         loader: "css-loader",
                         options: {
-                            importLoaders:  1,
+                            importLoaders: 1,
                             sourceMap: true
                         }
                     },
@@ -65,14 +80,15 @@ module.exports = {
                     },
                 ],
             }
-            ]
+        ]
     },
 
     devServer: {
+        host: 'localhost',
+        port: 80,
         hot: true, // Tell the dev-server we're using HMR
         contentBase: path.resolve(__dirname, 'dist'),
         publicPath: '/',
-
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
